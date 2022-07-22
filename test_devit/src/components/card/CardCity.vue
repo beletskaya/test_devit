@@ -1,11 +1,11 @@
 <template>
-  <div className="card-city">
-    <p className="card-city__name">{{ dataCity.city }}</p>
-    <div className="card-city__info">
-      <p className="card-city__info-temp">
+  <div class="card-city">
+    <p class="card-city__name">{{ dataCity.city }}</p>
+    <div class="card-city__info">
+      <p class="card-city__info-temp">
         {{ Math.round(dataCity.temp) }}°</p>
-      <div className="card-city__info__weather">
-        <p className="card-city__info__weather-text"><strong> {{ dataCity.weather }} </strong></p>
+      <div class="card-city__info__weather">
+        <p class="card-city__info__weather-text"><strong> {{ dataCity.weather }} </strong></p>
         <p v-if="dataCity.feels_like">Feels like {{ Math.round(dataCity.feels_like) }}°</p>
       </div>
     </div>
