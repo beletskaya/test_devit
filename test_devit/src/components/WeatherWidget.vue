@@ -29,7 +29,6 @@ export default {
     if (!localStorage.getItem('data-weather')) {
       this.getGeolocation()
     } else {
-      console.log(localStorage.getItem('data-weather').length)
       let storage = JSON.parse(localStorage.getItem('data-weather'));
       storage.forEach((item) => {
         this.getWeatherCity(item.city, item.isDefault)
@@ -90,7 +89,6 @@ export default {
       let storage = JSON.parse(localStorage.getItem('data-weather'))
       storage.splice(index, 1)
       localStorage.setItem('data-weather', JSON.stringify(storage))
-
     }
   },
   computed: {
