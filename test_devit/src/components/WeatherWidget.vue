@@ -48,8 +48,6 @@ export default {
     getWeatherInfo(lat, lon) {
      this.addWeatherData({lat, lon}).then((result) => {
        localStorage.setItem('data-weather', JSON.stringify([{'city': result.name, isDefault: true}]))
-       // eslint-disable-next-line
-       //debugger
         return result
       })
       .catch((e) => {
