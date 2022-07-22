@@ -1,21 +1,41 @@
 <template>
   <div class="location">
-   <p class="location__text">Location:</p>
-    <div class="location__input" >
+    <p class="location__text">Location:</p>
+    <div class="location__input" :class="$v.city.$error ? 'error' : ''">
       <input type="text" v-model="city" placeholder="Enter city" />
+      <div v-if="(!$v.city.required || !$v.city.minLength) && $v.city.$dirty" class="location__input-error">Field must be filled</div>
+      <div v-if="incorrectCity" class="location__input-error location__input-error-name">Incorrect name</div>
     </div>
     <div class="location__btn">
-      <button>Search</button>
+      <button @click="applyLocation">Search</button>
     </div>
   </div>
 </template>
 
 <script>
-
+import { validationMixin } from 'vuelidate'
+import { required, minLength }from 'vuelidate/lib/validators'
 export default {
+  mixins: [validationMixin],
   data() {
     return {
-      city: null
+      city: null,
+      incorrectCity: false
+    }
+  },
+  validations: {
+    city: {
+      required,
+      minLength: minLength(1)
+    }
+  },
+  methods: {
+    applyLocation() {
+      this.$v.city.$touch()
+      if(!this.$v.city.$error) {
+        this.$emit('get-weather-city', this.city)
+        this.$emit('check-reload', false)
+      }
     }
   }
 }
