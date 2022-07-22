@@ -1,10 +1,10 @@
 <template>
   <div class="card-info">
     <card-indicator
-      v-for="item in dataInfo"
-      :key="item.id"
-      :indicator="item.indicator"
-      :value="item.value"
+      v-for="{ id, indicator, value } in dataInfo"
+      :key="id"
+      :indicator="indicator"
+      :value="value"
     />
   </div>
 

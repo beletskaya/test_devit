@@ -25,19 +25,35 @@ export default {
   },
   computed: {
     filterDataCity() {
+      const {
+        name,
+        weather,
+          main: {
+            temp,
+            feels_like
+          }
+      } = this.data;
       return {
-        'city': this.data.name,
-        'temp': this.data.main.temp - 273,
-        'weather': this.data.weather[0].main,
-        'feels_like': this.data.main.feels_like - 273,
+        'city': name,
+        'temp': temp - 273,
+        'weather': weather[0].main,
+        'feels_like': feels_like - 273,
       }
     },
     filterDataInfo() {
+      const {
+        wind,
+        visibility,
+        main: {
+          pressure,
+          humidity
+        }
+      } = this.data;
       return [
-        {indicator: 'Wind, km/h', value: this.data.wind.speed},
-        {indicator: 'Visibility', value: this.data.visibility},
-        {indicator: 'Pressure', value: this.data.main.pressure},
-        {indicator: 'Humidity', value: this.data.main.humidity}]
+        {indicator: 'Wind, km/h', value: wind.speed},
+        {indicator: 'Visibility', value: visibility},
+        {indicator: 'Pressure', value: pressure},
+        {indicator: 'Humidity', value: humidity}]
     }
   }
 }
