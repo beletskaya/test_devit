@@ -1,12 +1,19 @@
 <template>
   <div class="weather-widjet">
     <h1>Current weather and air quality</h1>
-    <location-weather @get-weather-city="getWeatherCity" @check-reload="checkReload"
-                      :incorrectCity="incorrectCity"></location-weather>
+    <location-weather
+      @get-weather-city="getWeatherCity"
+      @check-reload="checkReload"
+      :incorrectCity="incorrectCity"
+    />
     <h2>Cities</h2>
     <div v-if="getWeatherData">
-      <card-weather v-for="(item, index) in getWeatherData"
-                    :data="item" :key="index" @delete-card="deleteCard(index)"></card-weather>
+      <card-weather
+        v-for="(item, index) in getWeatherData"
+        :data="item"
+        :key="item.id"
+        @delete-card="deleteCard(index)"
+      />
     </div>
   </div>
 </template>
@@ -15,7 +22,6 @@
 import LocationWeather from "@/components/LocationWeather";
 import CardWeather from "@/components/CardWeather";
 import axios from "axios";
-import {mapGetters} from 'vuex'
 
 export default {
   components: {LocationWeather, CardWeather},
@@ -92,7 +98,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getWeatherData'])
+    getWeatherData () {
+      return this.$store.state.weatherData
+    }
   }
 }
 </script>

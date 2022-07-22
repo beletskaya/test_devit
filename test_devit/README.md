@@ -1,4 +1,6 @@
 # test_devit
+## Requirements
+Should be installed Node.js, Vue CLI
 
 ## Project setup
 ```

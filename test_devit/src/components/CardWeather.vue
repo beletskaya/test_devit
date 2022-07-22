@@ -1,7 +1,7 @@
 <template>
   <div :class="['card', {'card__default' : data.isDefault}]">
-    <card-city :dataCity="filterDataCity"></card-city>
-    <card-info :dataInfo="filterDataInfo"></card-info>
+    <card-city :dataCity="filterDataCity"/>
+    <card-info :dataInfo="filterDataInfo"/>
     <span class="card__close" @click="closeCard" v-if="!data.isDefault">X</span>
   </div>
 
@@ -61,6 +61,11 @@ export default {
   &__default {
     background-color: #0072f50f;
     border: 1px solid #0072f5;
+
+    @media(max-width: 700px) {
+      flex-direction: column;
+      align-items: center;
+    }
   }
 }
 </style>

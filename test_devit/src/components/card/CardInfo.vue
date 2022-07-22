@@ -1,7 +1,11 @@
 <template>
   <div class="card-info">
-    <card-indicator v-for="(item, index) in dataInfo" :key="index"
-                    :indicator="item.indicator" :value="item.value"></card-indicator>
+    <card-indicator
+      v-for="item in dataInfo"
+      :key="item.id"
+      :indicator="item.indicator"
+      :value="item.value"
+    />
   </div>
 
 </template>
@@ -28,13 +32,24 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .card-info{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
   width: 50%;
   align-items: center;
+
+  @media (max-width: 1150px) {
+    width: 70%;
+  }
+  @media(max-width: 700px) {
+    width: 100%;
+    margin-top: 20px;
+  }
+  @media(max-width: 550px) {
+    flex-direction: column;
+  }
 }
 
 </style>

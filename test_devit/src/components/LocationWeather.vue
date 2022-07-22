@@ -54,14 +54,20 @@ export default {
   padding-bottom: 25px;
   margin-bottom: 50px;
 
+  @media(max-width: 450px) {
+    flex-wrap: wrap;
+  }
+
   &__input {
+    @media(min-width: 450px) {
+      margin-left: 20px;
+    }
     position: relative;
     display: flex;
     min-height: 30px;
     max-width: 410px;
     width: 100%;
     padding: 4px 5px;
-    margin-left: 20px;
     font-size: 14px;
     background-color: #f6f6f8;
     border: 0;
@@ -91,9 +97,11 @@ export default {
     }
   }
   &__btn {
+    @media(min-width: 450px) {
+      margin-left: 15px;
+    }
     display: flex;
     align-items: center;
-    margin-left: 15px;
 
     button {
       display: block;
@@ -108,6 +116,11 @@ export default {
       height: auto;
       border-radius: 16px;
       transition: background 0.3s;
+
+      @media (max-width: 450px) {
+        margin-top: 20px;
+        width: 200px;
+      }
       &:hover {
         background: #275fa0;
       }

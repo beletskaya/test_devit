@@ -31,6 +31,10 @@ export default {
   width: 45%;
   margin-bottom: 15px;
 
+  @media(max-width: 550px) {
+    width: 80%;
+  }
+
   p {
     margin: 7px 0;
   }
