@@ -1,22 +1,22 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <!--   <img alt="Vue logo" src="./assets/logo.png">-->
+    <weather-widget/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import WeatherWidget from './components/WeatherWidget.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    WeatherWidget
   }
 }
 </script>
 
-<style lang="scss">
+<style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
