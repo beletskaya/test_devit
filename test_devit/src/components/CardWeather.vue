@@ -21,7 +21,6 @@ export default {
   methods: {
     closeCard() {
       this.$emit('delete-card')
-      console.log('CLOSE')
     }
   },
   computed: {
