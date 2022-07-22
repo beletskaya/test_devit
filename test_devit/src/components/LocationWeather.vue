@@ -4,7 +4,6 @@
     <div class="location__input" :class="$v.city.$error ? 'error' : ''">
       <input type="text" v-model="city" placeholder="Enter city" />
       <div v-if="(!$v.city.required || !$v.city.minLength) && $v.city.$dirty" class="location__input-error">Field must be filled</div>
-      <div v-if="incorrectCity" class="location__input-error location__input-error-name">Incorrect name</div>
     </div>
     <div class="location__btn">
       <button @click="applyLocation">Search</button>
@@ -19,8 +18,7 @@ export default {
   mixins: [validationMixin],
   data() {
     return {
-      city: null,
-      incorrectCity: false
+      city: null
     }
   },
   validations: {

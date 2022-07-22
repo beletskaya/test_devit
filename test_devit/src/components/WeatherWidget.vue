@@ -1,10 +1,11 @@
 <template>
   <div class="weather-widjet">
     <h1>Current weather and air quality</h1>
-    <location-weather></location-weather>
+    <location-weather :incorrectCity="incorrectCity"></location-weather>
     <h2>Cities</h2>
-    <div>
-      <card-weather></card-weather>
+    <div v-if="getWeatherData">
+      <card-weather v-for="(item, index) in getWeatherData"
+                    :data="item" :key="index" @delete-card="deleteCard(index)"></card-weather>
     </div>
   </div>
 </template>
@@ -12,10 +13,52 @@
 <script>
 import LocationWeather from "@/components/LocationWeather";
 import CardWeather from "@/components/CardWeather";
+import axios from "axios";
+import {mapGetters} from 'vuex'
 
 export default {
   components: {LocationWeather, CardWeather},
+  data() {
+    return {
+      incorrectCity: false
+    }
+  },
+  mounted() {
+      this.getGeolocation()
+  },
+  methods: {
+    getWeatherInfo(lat, lon) {
+      axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=b4f2447b3b05c86e015a35a9e833b87a`)
+          .then((result) => {
+            let res = result.data;
+            res.isDefault = true
+            this.$store.dispatch('addWeatherData', res);
+            return res
+          })
+          .then((result) => {
+            localStorage.setItem('data-weather', JSON.stringify([{'city': result.name, isDefault: true}]))
+          })
+          .catch((e) => {
+            console.error(e.message);
+          })
+    },
+    getGeolocation() {
+      let that = this;
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          that.getWeatherInfo(position.coords.latitude, position.coords.longitude)
+        })
+      } else {
+        alert('Your browser does not support Navigator API');
+      }
+    },
+    deleteCard() {
 
+    }
+  },
+  computed: {
+    ...mapGetters(['getWeatherData'])
+  }
 }
 </script>
 

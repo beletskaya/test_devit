@@ -1,7 +1,7 @@
 <template>
   <div class="card-indicator">
-    <p class="card-indicator__name">1</p>
-    <p class="card-indicator__val"><strong>1</strong></p>
+    <p class="card-indicator__name">{{ indicator }}</p>
+    <p class="card-indicator__val"><strong>{{ value }}</strong></p>
   </div>
 
 </template>
@@ -9,7 +9,16 @@
 <script>
 
 export default {
-
+  props: {
+    indicator: {
+      type: String,
+      default: 'Wind'
+    },
+    value: {
+      type: Number,
+      default: 0
+    },
+  }
 }
 </script>
 

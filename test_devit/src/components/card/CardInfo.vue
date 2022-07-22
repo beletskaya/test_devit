@@ -12,13 +12,17 @@ import CardIndicator from "@/components/card/CardIndicator";
 
 export default {
   components: {CardIndicator},
-  data() {
-    return {
-      dataInfo: [
-        {indicator: 'Wind, km/h', value: 12.4},
-        {indicator: 'Visibility', value: 0},
-        {indicator: 'Pressure', value: 0},
-        {indicator: 'Humidity', value: 0}]
+  props: {
+    dataInfo: {
+      type: Array,
+      default() {
+        return [
+          {indicator: 'Wind, km/h', value: 12.4},
+          {indicator: 'Visibility', value: 0},
+          {indicator: 'Pressure', value: 0},
+          {indicator: 'Humidity', value: 0}
+        ]
+      }
     }
   }
 }
