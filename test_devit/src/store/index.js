@@ -15,6 +15,9 @@ export default new Vuex.Store({
   mutations: {
     WEATHER_DATA(state, payload) {
       state.weatherData.push( payload );
+    },
+    REMOVE_WEATHER_BY_INDEX(state, payload) {
+      state.weatherData.splice(payload,1)
     }
   },
   actions: {

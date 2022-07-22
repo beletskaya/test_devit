@@ -85,8 +85,8 @@ export default {
     checkReload(val) {
       this.noreload = val
     },
-    deleteCard() {
-
+    deleteCard(index) {
+      this.$store.commit('REMOVE_WEATHER_BY_INDEX', index)
     }
   },
   computed: {
