@@ -29,6 +29,7 @@ export default {
     if (!localStorage.getItem('data-weather')) {
       this.getGeolocation()
     } else {
+      console.log(localStorage.getItem('data-weather').length)
       let storage = JSON.parse(localStorage.getItem('data-weather'));
       storage.forEach((item) => {
         this.getWeatherCity(item.city, item.isDefault)
@@ -52,10 +53,9 @@ export default {
           })
     },
     getGeolocation() {
-      let that = this;
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          that.getWeatherInfo(position.coords.latitude, position.coords.longitude)
+        navigator.geolocation.getCurrentPosition( (position) =>  {
+          this.getWeatherInfo(position.coords.latitude, position.coords.longitude)
         })
       } else {
         alert('Your browser does not support Navigator API');
@@ -87,6 +87,10 @@ export default {
     },
     deleteCard(index) {
       this.$store.commit('REMOVE_WEATHER_BY_INDEX', index)
+      let storage = JSON.parse(localStorage.getItem('data-weather'))
+      storage.splice(index, 1)
+      localStorage.setItem('data-weather', JSON.stringify(storage))
+
     }
   },
   computed: {
