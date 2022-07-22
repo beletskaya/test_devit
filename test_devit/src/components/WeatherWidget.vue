@@ -21,7 +21,7 @@
 <script>
 import LocationWeather from "@/components/LocationWeather";
 import CardWeather from "@/components/CardWeather";
-import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   components: {LocationWeather, CardWeather},
@@ -42,20 +42,19 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'addWeatherData', 'addWeatherCity'
+    ]),
     getWeatherInfo(lat, lon) {
-      axios.get(`http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=b4f2447b3b05c86e015a35a9e833b87a`)
-          .then((result) => {
-            let res = result.data;
-            res.isDefault = true
-            this.$store.dispatch('addWeatherData', res);
-            return res
-          })
-          .then((result) => {
-            localStorage.setItem('data-weather', JSON.stringify([{'city': result.name, isDefault: true}]))
-          })
-          .catch((e) => {
-            console.error(e.message);
-          })
+     this.addWeatherData({lat, lon}).then((result) => {
+       localStorage.setItem('data-weather', JSON.stringify([{'city': result.name, isDefault: true}]))
+       // eslint-disable-next-line
+       //debugger
+        return result
+      })
+      .catch((e) => {
+        console.error(e.message);
+      })
     },
     getGeolocation() {
       if (navigator.geolocation) {
@@ -67,25 +66,18 @@ export default {
       }
     },
     getWeatherCity(city, isDefault = null) {
-      axios.get(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=b4f2447b3b05c86e015a35a9e833b87a`)
-          .then((result) => {
-            let res = result.data;
-            res.isDefault = isDefault
-            this.$store.dispatch('addWeatherData', res);
-            this.incorrectCity = false;
-            return res
-          })
-          .then((data) => {
-            if (!this.noreload) {
-              let storage = JSON.parse(localStorage.getItem('data-weather'))
-              storage.push({'city': data.name})
-              localStorage.setItem('data-weather', JSON.stringify(storage))
-            }
-          })
-          .catch((e) => {
-            this.incorrectCity = true
-            console.error(e.message);
-          })
+      this.addWeatherCity({city, isDefault}).then( (result) => {
+        this.incorrectCity = false;
+        if (!this.noreload) {
+          let storage = JSON.parse(localStorage.getItem('data-weather'))
+          storage.push({'city': result.name})
+          localStorage.setItem('data-weather', JSON.stringify(storage))
+        }
+      })
+      .catch((e) => {
+        this.incorrectCity = true
+        console.error(e.message);
+      })
     },
     checkReload(val) {
       this.noreload = val
