@@ -6,7 +6,7 @@
         {{ Math.round(dataCity.temp) }}°</p>
       <div class="card-city__info__weather">
         <p class="card-city__info__weather-text"><strong> {{ dataCity.weather }} </strong></p>
-        <p v-if="dataCity.feels_like">Feels like {{ Math.round(dataCity.feels_like) }}°</p>
+        <p v-if="dataCity.feels_like" class="card-city__info__weather-feel">Feels like {{ Math.round(dataCity.feels_like) }}°</p>
       </div>
     </div>
   </div>
