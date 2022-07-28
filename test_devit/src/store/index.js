@@ -6,7 +6,8 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    weatherData: []
+    weatherData: [],
+    weatherCities: JSON.parse(localStorage.getItem('data-weather'))
   },
   mutations: {
     WEATHER_DATA(state, payload) {
@@ -14,6 +15,10 @@ export default new Vuex.Store({
     },
     REMOVE_WEATHER_BY_INDEX(state, payload) {
       state.weatherData.splice(payload,1)
+    },
+    CHANGE_LOCALSTORAGE(state, payload) {
+      localStorage.setItem('data-weather', JSON.stringify(payload))
+      state.weatherCities = payload
     }
   },
   actions: {
@@ -27,8 +32,7 @@ export default new Vuex.Store({
           context.commit("WEATHER_DATA", result);
           return result
         })
-      }
-      catch (error) {
+      }catch (error) {
         console.error(error)
       }
     },
@@ -42,8 +46,7 @@ export default new Vuex.Store({
           context.commit("WEATHER_DATA", result);
           return result
         })
-      }
-      catch (error) {
+      }catch (error) {
         console.error(error)
       }
     }

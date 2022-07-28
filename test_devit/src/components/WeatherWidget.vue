@@ -2,35 +2,40 @@
   <div class="weather-widjet">
     <h1>Current weather and air quality</h1>
     <location-weather
-      @get-weather-city="getWeatherCity"
-      @check-reload="checkReload"
-      :incorrectCity="incorrectCity"
+        @get-weather-city="getWeatherCity"
+        @check-reload="checkReload"
+        :incorrectCity="incorrectCity"
     />
     <h2>Cities</h2>
-    <div v-if="getWeatherData">
-      <card-weather
-        v-for="(item, index) in getItems"
-        :data="item"
-        :key="item.id"
-        @delete-card="deleteCard(index)"
-      />
-      <vuejs-paginate
-          :page-count="getPaginateCount"
-          :prev-text="'<'"
-          :next-text="'>'"
-          :click-handler="paginateClickCallback"
-          :container-class="'pagination justify-content-center'"
-          :page-class="'page-item'"
-          :page-link-class="'page-link'"
-          :prev-class="'page-item'"
-          :prev-link-class="'page-link'"
-          :next-class="'page-item'"
-          :next-link-class="'page-link'"
-          :first-last-button="true"
-          :first-button-text="'<<'"
-          :last-button-text="'>>'"
-      ></vuejs-paginate>
-    </div>
+    <transition name="fade"  mode="out-in">
+      <div v-if="loaded" key="content">
+        <card-weather
+            v-for="(item, index) in getItems"
+            :data="item"
+            :key="item.id"
+            @delete-card="deleteCard(index)"
+        />
+        <vuejs-paginate
+            :page-count="getPaginateCount"
+            :prev-text="'<'"
+            :next-text="'>'"
+            :click-handler="paginateClickCallback"
+            :container-class="'pagination justify-content-center'"
+            :page-class="'page-item'"
+            :page-link-class="'page-link'"
+            :prev-class="'page-item'"
+            :prev-link-class="'page-link'"
+            :next-class="'page-item'"
+            :next-link-class="'page-link'"
+            :first-last-button="true"
+            :first-button-text="'<<'"
+            :last-button-text="'>>'"
+        ></vuejs-paginate>
+      </div>
+      <div v-else key="loading">
+        <img src="../assets/Loading.gif" alt="loading">
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -38,25 +43,25 @@
 import LocationWeather from "@/components/LocationWeather";
 import CardWeather from "@/components/CardWeather";
 import VuejsPaginate from "vuejs-paginate";
-import { mapActions } from 'vuex'
+import {mapActions, mapState} from 'vuex'
 
 export default {
   components: {LocationWeather, CardWeather, VuejsPaginate},
   data() {
     return {
+      loaded: false,
       incorrectCity: false,
       noreload: true,
       currentPage: 1,
-      perPage: 5,
+      perPage: 5
     }
   },
   mounted() {
-    if (!localStorage.getItem('data-weather')) {
-      this.getGeolocation()
+    if (!this.weatherCities) {
+      this.getGeolocation();
     } else {
-      let storage = JSON.parse(localStorage.getItem('data-weather'));
-      storage.forEach((item) => {
-        this.getWeatherCity(item.city, item.isDefault)
+      this.weatherCities.forEach((item) => {
+        this.getWeatherCity(item.city, item.isDefault);
       })
     }
   },
@@ -65,61 +70,63 @@ export default {
       'addWeatherData', 'addWeatherCity'
     ]),
     getWeatherInfo(lat, lon) {
-     this.addWeatherData({lat, lon}).then((result) => {
-       localStorage.setItem('data-weather', JSON.stringify([{'city': result.name, isDefault: true}]))
+      this.addWeatherData({lat, lon}).then((result) => {
+        this.$store.commit('CHANGE_LOCALSTORAGE', [{'city': result.name, isDefault: true}]);
+        this.loaded = true;
         return result
       })
       .catch((e) => {
         console.error(e.message);
+        alert('Your browser does not support Navigator API');
       })
     },
     getGeolocation() {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition( (position) =>  {
-          this.getWeatherInfo(position.coords.latitude, position.coords.longitude)
+        navigator.geolocation.getCurrentPosition((position) => {
+          this.getWeatherInfo(position.coords.latitude, position.coords.longitude);
         })
       } else {
         alert('Your browser does not support Navigator API');
       }
     },
     getWeatherCity(city, isDefault = null) {
-      this.addWeatherCity({city, isDefault}).then( (result) => {
+      this.loaded = false;
+      this.addWeatherCity({city, isDefault}).then((result) => {
         this.incorrectCity = false;
         if (!this.noreload) {
-          let storage = JSON.parse(localStorage.getItem('data-weather'))
-          storage.push({'city': result.name})
-          localStorage.setItem('data-weather', JSON.stringify(storage))
+          let storage = this.weatherCities;
+          storage.push({'city': result.name});
+          this.$store.commit('CHANGE_LOCALSTORAGE', storage);
         }
+        this.loaded = true;
       })
-      .catch((e) => {
-        this.incorrectCity = true
-        console.error(e.message);
+      .catch(() => {
+        this.incorrectCity = true;
+        this.loaded = true;
       })
     },
     checkReload(val) {
-      this.noreload = val
+      this.noreload = val;
     },
     deleteCard(index) {
-      this.$store.commit('REMOVE_WEATHER_BY_INDEX', index)
-      let storage = JSON.parse(localStorage.getItem('data-weather'))
-      storage.splice(index, 1)
-      localStorage.setItem('data-weather', JSON.stringify(storage))
+      this.$store.commit('REMOVE_WEATHER_BY_INDEX', index);
+      let storage = this.weatherCities;
+      storage.splice(index, 1);
+      this.$store.commit('CHANGE_LOCALSTORAGE', storage);
     },
-    paginateClickCallback (pageNum) {
+    paginateClickCallback(pageNum) {
       this.currentPage = Number(pageNum);
     }
   },
   computed: {
-    getWeatherData () {
-      return this.$store.state.weatherData
-    },
+    ...mapState(["weatherData", "weatherCities"]),
     getItems() {
       let start = (this.currentPage - 1) * this.perPage;
       let end = this.currentPage * this.perPage;
-      return this.getWeatherData.slice(start, end);
+      return this.weatherData.slice(start, end);
     },
     getPaginateCount() {
-      return Math.ceil(this.getWeatherData.length / this.perPage);
+      return Math.ceil(this.weatherData.length / this.perPage);
     }
   }
 }
@@ -129,7 +136,7 @@ export default {
 .weather-widjet {
   padding: 0 25px 40px;
 
-  .pagination{
+  .pagination {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,6 +160,11 @@ export default {
       }
     }
   }
+  .fade-enter-active, .fade-leave-active {
+    transition: opacity .3s ease;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
 }
-
 </style>
