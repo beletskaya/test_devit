@@ -25,7 +25,7 @@ export default new Vuex.Store({
     addWeatherData(context, {lat, lon}) {
       try {
         return axios.get(
-            `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=b4f2447b3b05c86e015a35a9e833b87a`
+            `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=b4f2447b3b05c86e015a35a9e833b87a`
         ).then((data) => {
           let result = data.data
           result.isDefault = true
@@ -39,7 +39,7 @@ export default new Vuex.Store({
     addWeatherCity(context, {city, isDefault}) {
       try {
         return axios.get(
-            `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=b4f2447b3b05c86e015a35a9e833b87a`
+            `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=b4f2447b3b05c86e015a35a9e833b87a`
         ).then((data) => {
           let result = data.data
           result.isDefault = isDefault;
